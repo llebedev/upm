@@ -35,7 +35,7 @@ bool checkArguments(int argc, char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
-    if(checkRoot() == false) return 0;
+    if(!checkRoot()) return 0;
 
     if(argc<2) help(1);
     else if(checkArguments(argc, argv)) {
