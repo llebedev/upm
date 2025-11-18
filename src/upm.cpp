@@ -1,3 +1,5 @@
+#define CONFIG_PATH "/etc/upm/upm.conf"
+
 #include "utils.hpp"
 #include <cstdio>
 #include <cstring>
@@ -6,9 +8,11 @@
 #include <unordered_map>
 #include <vector>
 #include "upm.hpp"
+#include "config.hpp"
 #include "fileutils.hpp"
 
 Operation currentOperation;
+Config *globalCfg = NULL;
 
 std::unordered_map<std::string, Operation> arguments = {
     {"install",INSTALL },
@@ -40,5 +44,6 @@ int main(int argc, char* argv[]) {
     if(argc<2) help(1);
     else if(checkArguments(argc, argv)) {
         checkDirectories();
+        if(!checkExist(CONFIG_PATH)) createFile(CONFIG_PATH);
     } else help(0);
 }

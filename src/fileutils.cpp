@@ -10,14 +10,23 @@ std::vector<char*> directories = {
     "/store/deb",
     "/store/nix",
     "/store/arch",
-    "/store/dfn"
+    "/store/dnf"
 };
 
-void createFile(char *name) {
+void createFile(char *path) {
+    std::filesystem::path dpath(path);
 
+    if(!std::filesystem::exists(dpath)) std::filesystem::create_directory(dpath.parent_path());
+
+    std::ofstream fs(path);
+    fs<<""<<"\n";
 }
 void unpackFile() {
 
+}
+
+bool checkExist(char* path) {
+    return std::filesystem::exists(path);
 }
 
 void createDirectories(char* path) {
@@ -40,13 +49,8 @@ void createDirectories(char* path) {
 
 void checkDirectories() {
     for(int i = 0;i<directories.size();i++) {
-        if(!std::filesystem::exists(directories[i])) {
-            threads.emplace_back(createDirectories, directories[i]);
-        }
+        if(!std::filesystem::exists(directories[i])) threads.emplace_back(createDirectories, directories[i]);
+
     }
-    for(auto& thread: threads) {
-        if(thread.joinable()) {
-            thread.join();
-        }
-    }
+    for(auto& thread: threads) if(thread.joinable()) thread.join();
 }
